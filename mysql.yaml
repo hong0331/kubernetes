@@ -1,0 +1,32 @@
+## Create an sql container accessible within clusters
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  containers:
+    - name: mysql
+      image: mysql:5
+      #Setting env variable in the container 
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: your password
+        # create default database 
+        - name: DATABASE_NAME
+          value: database name 
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: database
+spec:
+  selector: 
+    app: mysql
+  ports:
+    - port: 3306
+    # only accessible from the cluster 
+    type: ClusterIP
